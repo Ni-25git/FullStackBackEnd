@@ -41,7 +41,7 @@ user.post('/login' , async (req,res)=>{
 
         const token = jwt.sign({user:{_id:user.id , role:user.role}} , process.env.JWT_SECRET_KEY , {expiresIn: '1h'});
 
-        res.status(201).json({msg:`${user.username} logged in successfully`,token})
+        res.status(201).json({msg:`${user.username} logged in successfully`,token,userId: user._id})
     } catch (error) {
         res.status(501).json({msg:error.message})
     }
