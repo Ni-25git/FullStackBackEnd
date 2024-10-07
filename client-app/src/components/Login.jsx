@@ -5,24 +5,25 @@ import {Navigate, useNavigate} from "react-router-dom";
 const Login = () => {
   const [data, setData] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate()
+  const Navigate = useNavigate()
 
-  // Handling input changes
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
-  // Handling login action
+  
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:4500/api/auth/login', data);
 
       if (response.status === 201) {
-        // Store token in local storage
+      
+        localStorage.setItem('userId' , response.data.userId)
         localStorage.setItem('token', response.data.token); 
         alert('You are logged in');
-        navigate('/products')
+        Navigate('/products')
       }
     } catch (error) {
       setErrorMessage('Login failed. Please check your credentials and try again.');
@@ -34,7 +35,7 @@ const Login = () => {
     <div className='flex flex-col border-1 gap-4 m-auto max-w-[600px] mt-[100px] p-2'>
       <h1 className='text-black font-extrabold text-center text-2xl'>Login Details below</h1>
 
-      {/* Display error message if login fails */}
+      
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
       <label className='text-black font-extrabold text-lg'>E-Mail</label>

@@ -17,19 +17,39 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token'); // Assuming you store your token in localStorage
-      const response = await axios.post('http://localhost:5173/api/products/', formData, {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId'); 
+
+      if (!userId) {
+        alert('User ID is missing. Please login again.');
+        return;
+      }
+
+      
+      const productData = {
+        ...formData,
+        userId, 
+      };
+
+      const response = await axios.post('http://localhost:4500/api/products/', productData, {
         headers: {
-          Authorization: `Bearer ${token}`, // Send the token with the request
+          Authorization: `Bearer ${token}`, 
         },
       });
-      if(response.status===201){
-        console.log(response.data);
-        alert('Product added successfully');
 
+      if (response.status === 201) {
+        alert('Product added successfully');
+      
+        setFormData({
+          name: '',
+          category: '',
+          brand: '',
+          price: '',
+          stock: '',
+        });
       }
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error.response?.data || error.message);
       alert('Error adding product');
     }
   };
